@@ -1,0 +1,77 @@
+# Имя устройства, будет подставляться по тексту конфига
+substitutions:
+  plug_name: ir_bedroom
+
+esphome:
+  name: ir_bedroom
+  platform: ESP8266
+  board: esp_wroom_02
+  includes: 
+    - gree/gree_ir.h
+  libraries:
+    - IRremoteESP8266
+
+# Параметры сети
+wifi:
+  ssid: ''
+  password: 
+  fast_connect: true
+
+# Логирование
+logger:
+
+# Активация Home Assistant API
+api:
+  password: ''
+
+ota:
+  password: ''
+
+status_led:
+  pin: GPIO4
+
+remote_receiver:
+  pin: 
+    number: GPIO5
+    inverted: true
+  dump: all
+
+remote_transmitter:
+  pin: 
+    number: GPIO14
+    inverted: false
+  carrier_duty_percent: 50%
+  id: "ir_bedroom_transmitter"
+    
+climate:
+- platform: custom
+  lambda: |-
+    auto bedroom_ac = new GreeAC();
+    App.register_component(bedroom_ac);
+    return {bedroom_ac};
+
+  climates:
+    - name: "Bedroom AC"
+
+custom_component:
+- lambda: |-
+    auto gree_api = new GreeApi();
+    return {gree_api};
+    
+binary_sensor:
+- platform: gpio
+  pin:
+    number: GPIO13
+    inverted: true
+  internal: true
+  name: "ir_bedroom_button"
+  id: "ir_bedroom_button"
+    
+- platform: custom
+  lambda: |-
+    auto gree_binary_sensor = new GreeSensor();
+    App.register_component(gree_binary_sensor);
+    return {gree_binary_sensor};
+
+  binary_sensors:
+    name: "Bedroom AC light"
