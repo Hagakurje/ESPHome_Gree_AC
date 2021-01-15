@@ -1,9 +1,34 @@
-# ESPHome [![Build Status](https://travis-ci.org/esphome/esphome.svg?branch=master)](https://travis-ci.org/esphome/esphome) [![Discord Chat](https://img.shields.io/discord/429907082951524364.svg)](https://discord.gg/KhAMKrd) [![GitHub release](https://img.shields.io/github/release/esphome/esphome.svg)](https://GitHub.com/esphome/esphome/releases/)
+#Control Gree AC using ESPHome and IRremoteESP8266 - EXAMPLE
 
-[![ESPHome Logo](https://esphome.io/_images/logo-text.png)](https://esphome.io/)
+**IR remote** - Avatto S06
 
-**Documentation:** https://esphome.io/
+* Create file "gree_ir.h" in folder "config\esphome\gree", where "config" is HA configuration folder.
+* Edit your ".yaml" file like "ir_bedroom.yaml".
 
-For issues, please go to [the issue tracker](https://github.com/esphome/issues/issues).
+**UART:**
+* port 3v3 of the device to the 3v3 of the converter.
+* port TXD of the device to the RXD of the converter.
+* port RXD of the device to the TXD of the converter.
+* port GND of the device to the GND of the converter.
+* port IO0 of the device to the GND of the converter.
 
-For feature requests, please see [feature requests](https://github.com/esphome/feature-requests/issues).
+**Flash** using ESPHome-Flasher https://github.com/esphome/esphome-flasher/releases. First flash with UART, other flashes on air.
+
+**Result:**
+
+![Bedroom AC](images/bedroom_ac.png)
+
+
+**Service esphome.ir_bedroom_set_data** - set all data to AC with one 'beep':
+
+```
+- esphome: mqtt.ir_bedroom_set_data
+  data:
+    hvac: 'cool'
+    temp: 22
+    fan: 'auto'
+    swing: 'off'
+    light: True
+```
+
+**Sensor binary_sensor.bedroom_ac_light** - current AC light state.
