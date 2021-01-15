@@ -1,4 +1,4 @@
-#Control Gree AC using ESPHome and IRremoteESP8266 - EXAMPLE
+# Control Gree AC using ESPHome and IRremoteESP8266 - EXAMPLE
 
 **IR remote** - Avatto S06
 
