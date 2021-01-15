@@ -22,7 +22,7 @@
 **Service esphome.ir_bedroom_set_data** - set all data to AC with one 'beep':
 
 ```
-- esphome: mqtt.ir_bedroom_set_data
+- service: esphome.ir_bedroom_set_data
   data:
     hvac: 'cool'
     temp: 22
