@@ -8,17 +8,17 @@ esphome:
     - IRremoteESP8266
 
 wifi:
-  ssid: ''
-  password: 
+  ssid: ''            #Enter wifi ssid
+  password:           #Enter wiwi password
   fast_connect: true
 
 logger:
 
 api:
-  password: ''
+  password: ''        #Enter api password
 
 ota:
-  password: ''
+  password: ''        #Enter ota password
 
 status_led:
   pin: GPIO4
@@ -45,11 +45,6 @@ climate:
 
   climates:
     - name: "Bedroom AC"
-
-custom_component:
-- lambda: |-
-    auto gree_api = new GreeApi();
-    return {gree_api};
     
 binary_sensor:
 - platform: gpio

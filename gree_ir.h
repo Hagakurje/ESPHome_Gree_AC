@@ -6,11 +6,13 @@
 const uint16_t kIrLed = 14;
 IRGreeAC ac(kIrLed);
 
-class GreeAC : public Component, public Climate
+class GreeAC : public Component, public Climate, public CustomAPIDevice
 {
 public:
   void setup() override
   {
+    register_service(&GreeAC::set_data, "set_data", {"hvac", "temp", "fan", "swing", "light"});
+
     ac.begin();
     ac.on();
 
@@ -129,23 +131,59 @@ public:
     ac.send();
     delay(200);
   }
-};
 
-class GreeApi : public Component, public CustomAPIDevice
-{
-public:
-  void setup() override
+  void set_data(std::string hvac, float temp, std::string fan, std::string swing, bool light)
   {
-    register_service(&GreeApi::set_light, "set_light", {"light"});
-  }
+    auto call = this->make_call();
 
-  void set_light(bool light)
-  {
-    ESP_LOGD("GreeApi", "Set light to ", light ? "ON" : "OFF");
-    
+    if (hvac == "off")
+    {
+      call.set_mode(CLIMATE_MODE_OFF);
+    }
+    else if (hvac == "heat_cool")
+    {
+      call.set_mode(CLIMATE_MODE_AUTO);
+    }
+    else if (hvac == "heat")
+    {
+      call.set_mode(CLIMATE_MODE_HEAT);
+    }
+    else if (hvac == "cool")
+    {
+      call.set_mode(CLIMATE_MODE_COOL);
+    }
+
+    call.set_target_temperature(temp);
+
+    if (fan == "auto")
+    {
+      call.set_fan_mode(CLIMATE_FAN_AUTO);
+    }
+    else if (fan == "low")
+    {
+      call.set_fan_mode(CLIMATE_FAN_LOW);
+    }
+    else if (fan == "medium")
+    {
+      call.set_fan_mode(CLIMATE_FAN_MEDIUM);
+    }
+    else if (fan == "high")
+    {
+      call.set_fan_mode(CLIMATE_FAN_HIGH);
+    }
+
+    if (swing == "off")
+    {
+      call.set_swing_mode(CLIMATE_SWING_OFF);
+    }
+    else if (fan == "vertical")
+    {
+      call.set_swing_mode(CLIMATE_SWING_VERTICAL);
+    }
+
     ac.setLight(light);
-    ac.send();
-    delay(200);
+
+    call.perform();
   }
 };
 
