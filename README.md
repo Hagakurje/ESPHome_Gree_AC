@@ -3,6 +3,7 @@
 **IR remote** - Avatto S06
 
 * Create file "gree_ir.h" in folder "config\esphome\gree", where "config" is HA configuration folder.
+* Set remote transmitter pin **const uint16_t kIrLed = 14;**
 * Edit your ".yaml" file like "ir_bedroom.yaml".
 
 **UART:**
