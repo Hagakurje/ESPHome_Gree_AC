@@ -32,4 +32,20 @@
     light: True
 ```
 
+**Service esphome.ir_bedroom_set_current_tempareture** - set current temperature from external temperature sensor:
+
+```
+automation:
+  - alias: "Bedroom AC current temp"
+    trigger:
+      - platform: state
+        entity_id: sensor.bedroom_temperature
+    mode: queued
+    action:
+      - service: esphome.ir_bedroom_set_current_tempareture
+        data:
+          temp: >-
+            {{ states('sensor.bedroom_temperature') | float }}
+```
+
 **Sensor binary_sensor.bedroom_ac_light** - current AC light state.

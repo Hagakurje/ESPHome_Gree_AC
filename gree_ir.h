@@ -12,6 +12,7 @@ public:
   void setup() override
   {
     register_service(&GreeAC::set_data, "set_data", {"hvac", "temp", "fan", "swing", "light"});
+    register_service(&GreeAC::set_current_tempareture, "set_current_tempareture", {"temp"});
 
     ac.begin();
     ac.on();
@@ -184,6 +185,12 @@ public:
     ac.setLight(light);
 
     call.perform();
+  }
+
+  void set_current_tempareture(float temp)
+  {
+    this->current_temperature = temp;
+    this->publish_state();
   }
 };
 
