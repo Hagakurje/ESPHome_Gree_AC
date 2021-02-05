@@ -177,7 +177,7 @@ public:
     {
       call.set_swing_mode(CLIMATE_SWING_OFF);
     }
-    else if (fan == "vertical")
+    else if (swing == "vertical")
     {
       call.set_swing_mode(CLIMATE_SWING_VERTICAL);
     }
