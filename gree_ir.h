@@ -33,7 +33,7 @@ public:
     traits.set_visual_max_temperature(30);
     traits.set_visual_temperature_step(1.f);
 
-    traits.set_supports_auto_mode(true);
+    traits.set_supports_heat_cool_mode(true);
     traits.set_supports_cool_mode(true);
     traits.set_supports_heat_mode(true);
     traits.set_supports_fan_only_mode(false);
