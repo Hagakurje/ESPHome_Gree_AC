@@ -31,23 +31,32 @@ public:
     traits.set_supports_two_point_target_temperature(false);
     traits.set_visual_min_temperature(16);
     traits.set_visual_max_temperature(30);
-    traits.set_visual_temperature_step(1.f);
+    traits.set_visual_temperature_step(0.1);
 
-    traits.set_supports_heat_cool_mode(true);
-    traits.set_supports_cool_mode(true);
-    traits.set_supports_heat_mode(true);
-    traits.set_supports_fan_only_mode(false);
-    traits.set_supports_dry_mode(false);
 
-    traits.set_supports_fan_mode_auto(true);
-    traits.set_supports_fan_mode_low(true);
-    traits.set_supports_fan_mode_medium(true);
-    traits.set_supports_fan_mode_high(true);
+    std::set<ClimateMode> climateModes;
+    climateModes.insert(CLIMATE_MODE_OFF);
+    climateModes.insert(CLIMATE_MODE_HEAT_COOL);
+    climateModes.insert(CLIMATE_MODE_COOL);
+    climateModes.insert(CLIMATE_MODE_HEAT);
 
-    traits.set_supports_swing_mode_off(true);
-    traits.set_supports_swing_mode_both(false);
-    traits.set_supports_swing_mode_vertical(true);
-    traits.set_supports_swing_mode_horizontal(false);
+    traits.set_supported_modes(climateModes);
+
+
+    std::set<ClimateFanMode> climateFanModes; 
+    climateFanModes.insert(CLIMATE_FAN_AUTO);
+    climateFanModes.insert(CLIMATE_FAN_LOW);
+    climateFanModes.insert(CLIMATE_FAN_MEDIUM);
+    climateFanModes.insert(CLIMATE_FAN_HIGH);
+
+    traits.set_supported_fan_modes(climateFanModes);
+
+
+    std::set<ClimateSwingMode> climateSwingModes;
+    climateSwingModes.insert(CLIMATE_SWING_OFF);
+    climateSwingModes.insert(CLIMATE_SWING_VERTICAL);
+
+    traits.set_supported_swing_modes(climateSwingModes);
 
     return traits;
   }
