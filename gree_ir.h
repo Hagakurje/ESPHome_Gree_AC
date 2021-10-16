@@ -31,7 +31,7 @@ public:
     traits.set_supports_two_point_target_temperature(false);
     traits.set_visual_min_temperature(16);
     traits.set_visual_max_temperature(30);
-    traits.set_visual_temperature_step(0.1);
+    traits.set_visual_temperature_step(1);
 
 
     std::set<ClimateMode> climateModes; 
@@ -203,10 +203,16 @@ public:
   }
 };
 
-class GreeSensor : public PollingComponent, public BinarySensor
-{
-public:
-  GreeSensor() : PollingComponent(5000) {}
+class GreeLightSwitch : public PollingComponent, public Switch {
+ public:
+  GreeLightSwitch() : PollingComponent(5000) {}
+
+  void write_state(bool state) override {
+    ac.setLight(state);
+    ac.send();
+
+    publish_state(ac.getLight());
+  }
 
   void update() override
   {

@@ -55,11 +55,12 @@ binary_sensor:
   name: "ir_bedroom_button"
   id: "ir_bedroom_button"
     
+switch:
 - platform: custom
   lambda: |-
-    auto gree_binary_sensor = new GreeSensor();
-    App.register_component(gree_binary_sensor);
-    return {gree_binary_sensor};
+    auto gree_light_switch = new GreeLightSwitch();
+    App.register_component(gree_light_switch);
+    return {gree_light_switch};
 
-  binary_sensors:
-    name: "Bedroom AC light"
+  switches:
+    name: "Bedroom AC light" 
