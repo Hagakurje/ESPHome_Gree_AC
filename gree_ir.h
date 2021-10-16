@@ -11,7 +11,7 @@ class GreeAC : public Component, public Climate, public CustomAPIDevice
 public:
   void setup() override
   {
-    register_service(&GreeAC::set_data, "set_data", {"hvac", "temp", "fan", "swing", "light"});
+    register_service(&GreeAC::set_data, "set_data", {"hvac", "temp", "fan", "swing", "light", "turbo"});
     register_service(&GreeAC::set_current_tempareture, "set_current_tempareture", {"temp"});
 
     ac.begin();
@@ -29,9 +29,9 @@ public:
 
     traits.set_supports_current_temperature(true);
     traits.set_supports_two_point_target_temperature(false);
-    traits.set_visual_min_temperature(16);
+    traits.set_visual_min_temperature(17);
     traits.set_visual_max_temperature(30);
-    traits.set_visual_temperature_step(0.1);
+    traits.set_visual_temperature_step(1);
 
 
     std::set<ClimateMode> climateModes;
@@ -39,6 +39,8 @@ public:
     climateModes.insert(CLIMATE_MODE_HEAT_COOL);
     climateModes.insert(CLIMATE_MODE_COOL);
     climateModes.insert(CLIMATE_MODE_HEAT);
+    climateModes.insert(CLIMATE_MODE_DRY);
+    climateModes.insert(CLIMATE_MODE_FAN_ONLY);
 
     traits.set_supported_modes(climateModes);
 
@@ -48,6 +50,7 @@ public:
     climateFanModes.insert(CLIMATE_FAN_LOW);
     climateFanModes.insert(CLIMATE_FAN_MEDIUM);
     climateFanModes.insert(CLIMATE_FAN_HIGH);
+    climateFanModes.insert(CLIMATE_FAN_FOCUS);
 
     traits.set_supported_fan_modes(climateFanModes);
 
@@ -70,17 +73,31 @@ public:
       {
       case CLIMATE_MODE_HEAT:
         ac.setMode(kGreeHeat);
+        ac.setLight(true);
         ac.on();
         break;
       case CLIMATE_MODE_COOL:
         ac.setMode(kGreeCool);
+        ac.setLight(true);
         ac.on();
         break;
       case CLIMATE_MODE_AUTO:
         ac.setMode(kGreeAuto);
+        ac.setLight(true);
+        ac.on();
+        break;
+      case CLIMATE_MODE_DRY:
+        ac.setMode(kGreeDry);
+        ac.setLight(true);
+        ac.on();
+        break;
+      case CLIMATE_MODE_FAN_ONLY:
+        ac.setMode(kGreeFan);
+        ac.setLight(true);
         ac.on();
         break;
       case CLIMATE_MODE_OFF:
+        ac.setLight(false);
         ac.off();
         break;
       }
@@ -105,15 +122,23 @@ public:
       {
       case CLIMATE_FAN_AUTO:
         ac.setFan(kGreeFanAuto);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_LOW:
         ac.setFan(kGreeFanMin);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_MEDIUM:
         ac.setFan(kGreeFanMed);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_HIGH:
         ac.setFan(kGreeFanMax);
+        ac.setTurbo(false);
+        break;
+      case CLIMATE_FAN_FOCUS:
+        ac.setFan(kGreeFanMax);
+        ac.setTurbo(true);
         break;
       }
 
@@ -127,7 +152,7 @@ public:
       switch (swingMode)
       {
       case CLIMATE_SWING_OFF:
-        ac.setSwingVertical(false, kGreeSwingMiddle);
+        ac.setSwingVertical(false, kGreeSwingLastPos);
         break;
       case CLIMATE_SWING_VERTICAL:
         ac.setSwingVertical(true, kGreeSwingAuto);
@@ -142,7 +167,7 @@ public:
     delay(200);
   }
 
-  void set_data(std::string hvac, float temp, std::string fan, std::string swing, bool light)
+  void set_data(std::string hvac, float temp, std::string fan, std::string swing, bool light, bool turbo)
   {
     auto call = this->make_call();
 
@@ -162,8 +187,18 @@ public:
     {
       call.set_mode(CLIMATE_MODE_COOL);
     }
+    else if (hvac == "dry")
+    {
+      call.set_mode(CLIMATE_MODE_DRY);
+    }
+    else if (hvac == "fan_only")
+    {
+      call.set_mode(CLIMATE_MODE_FAN_ONLY);
+    }
+
 
     call.set_target_temperature(temp);
+
 
     if (fan == "auto")
     {
@@ -181,6 +216,11 @@ public:
     {
       call.set_fan_mode(CLIMATE_FAN_HIGH);
     }
+    else if (fan == "focus")
+    {
+      call.set_fan_mode(CLIMATE_FAN_FOCUS);
+    }
+
 
     if (swing == "off")
     {
@@ -190,8 +230,6 @@ public:
     {
       call.set_swing_mode(CLIMATE_SWING_VERTICAL);
     }
-
-    ac.setLight(light);
 
     call.perform();
   }
@@ -203,13 +241,24 @@ public:
   }
 };
 
-class GreeSensor : public PollingComponent, public BinarySensor
+class GreeSensorLight : public PollingComponent, public BinarySensor
 {
 public:
-  GreeSensor() : PollingComponent(5000) {}
+  GreeSensorLight() : PollingComponent(5000) {}
 
   void update() override
   {
     publish_state(ac.getLight());
+  }
+};
+
+class GreeSensorTurbo : public PollingComponent, public BinarySensor
+{
+public:
+  GreeSensorTurbo() : PollingComponent(5000) {}
+
+  void update() override
+  {
+    publish_state(ac.getTurbo());
   }
 };
