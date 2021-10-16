@@ -42,7 +42,6 @@ climate:
     auto bedroom_ac = new GreeAC();
     App.register_component(bedroom_ac);
     return {bedroom_ac};
-
   climates:
     - name: "Bedroom AC"
     
@@ -57,9 +56,16 @@ binary_sensor:
     
 - platform: custom
   lambda: |-
-    auto gree_binary_sensor = new GreeSensor();
-    App.register_component(gree_binary_sensor);
-    return {gree_binary_sensor};
-
+    auto gree_binary_sensor_light = new GreeSensorLight();
+    App.register_component(gree_binary_sensor_light);
+    return {gree_binary_sensor_light};
   binary_sensors:
     name: "Bedroom AC light"
+
+- platform: custom
+  lambda: |-
+    auto gree_binary_sensor_turbo = new GreeSensorTurbo();
+    App.register_component(gree_binary_sensor_turbo);
+    return {gree_binary_sensor_turbo};
+  binary_sensors:
+    name: "Bedroom AC Turbo mode"
