@@ -48,4 +48,4 @@ automation:
             {{ states('sensor.bedroom_temperature') | float }}
 ```
 
-**Sensor binary_sensor.bedroom_ac_light** - current AC light state.
+**Switch switch.bedroom_ac_light** - current AC light switch.
