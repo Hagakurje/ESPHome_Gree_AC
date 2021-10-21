@@ -139,7 +139,6 @@ public:
     }
 
     ac.send();
-    delay(200);
   }
 
   void set_data(std::string hvac, float temp, std::string fan, std::string swing, bool light)
