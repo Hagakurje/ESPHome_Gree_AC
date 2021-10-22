@@ -39,6 +39,8 @@ public:
     climateModes.insert(CLIMATE_MODE_HEAT_COOL);
     climateModes.insert(CLIMATE_MODE_COOL);
     climateModes.insert(CLIMATE_MODE_HEAT);
+    climateModes.insert(CLIMATE_MODE_DRY);
+    climateModes.insert(CLIMATE_MODE_FAN_ONLY);
 
     traits.set_supported_modes(climateModes);
 
@@ -48,6 +50,7 @@ public:
     climateFanModes.insert(CLIMATE_FAN_LOW);
     climateFanModes.insert(CLIMATE_FAN_MEDIUM);
     climateFanModes.insert(CLIMATE_FAN_HIGH);
+    climateFanModes.insert(CLIMATE_FAN_FOCUS);
 
     traits.set_supported_fan_modes(climateFanModes);
 
@@ -76,13 +79,22 @@ public:
         ac.setMode(kGreeCool);
         ac.on();
         break;
-      case CLIMATE_MODE_AUTO:
+      case CLIMATE_MODE_HEAT_COOL:
         ac.setMode(kGreeAuto);
+        ac.on();
+        break;
+      case CLIMATE_MODE_DRY:
+        ac.setMode(kGreeDry);
+        ac.on();
+        break;
+      case CLIMATE_MODE_FAN_ONLY:
+        ac.setMode(kGreeFan);
         ac.on();
         break;
       case CLIMATE_MODE_OFF:
         ac.off();
         break;
+
       }
 
       this->mode = climateMode;
@@ -105,15 +117,23 @@ public:
       {
       case CLIMATE_FAN_AUTO:
         ac.setFan(kGreeFanAuto);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_LOW:
         ac.setFan(kGreeFanMin);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_MEDIUM:
         ac.setFan(kGreeFanMed);
+        ac.setTurbo(false);
         break;
       case CLIMATE_FAN_HIGH:
         ac.setFan(kGreeFanMax);
+        ac.setTurbo(false);
+        break;
+      case CLIMATE_FAN_FOCUS:
+        ac.setFan(kGreeFanMax);
+        ac.setTurbo(true);
         break;
       }
 
@@ -127,7 +147,7 @@ public:
       switch (swingMode)
       {
       case CLIMATE_SWING_OFF:
-        ac.setSwingVertical(false, kGreeSwingMiddle);
+        ac.setSwingVertical(false, kGreeSwingLastPos);
         break;
       case CLIMATE_SWING_VERTICAL:
         ac.setSwingVertical(true, kGreeSwingAuto);
@@ -151,7 +171,7 @@ public:
     }
     else if (hvac == "heat_cool")
     {
-      call.set_mode(CLIMATE_MODE_AUTO);
+      call.set_mode(CLIMATE_MODE_HEAT_COOL);
     }
     else if (hvac == "heat")
     {
@@ -160,6 +180,14 @@ public:
     else if (hvac == "cool")
     {
       call.set_mode(CLIMATE_MODE_COOL);
+    }
+    else if (hvac == "dry")
+    {
+      call.set_mode(CLIMATE_MODE_DRY);
+    }
+    else if (hvac == "fan_only")
+    {
+      call.set_mode(CLIMATE_MODE_FAN_ONLY);
     }
 
     call.set_target_temperature(temp);
@@ -179,6 +207,10 @@ public:
     else if (fan == "high")
     {
       call.set_fan_mode(CLIMATE_FAN_HIGH);
+    }
+    else if (fan == "focus")
+    {
+      call.set_fan_mode(CLIMATE_FAN_FOCUS);
     }
 
     if (swing == "off")
