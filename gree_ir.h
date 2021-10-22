@@ -159,7 +159,6 @@ public:
     }
 
     ac.send();
-//    delay(200);
   }
 
   void set_data(std::string hvac, float temp, std::string fan, std::string swing, bool light)
@@ -172,7 +171,7 @@ public:
     }
     else if (hvac == "heat_cool")
     {
-      call.set_mode(CLIMATE_MODE_AUTO);
+      call.set_mode(CLIMATE_MODE_HEAT_COOL);
     }
     else if (hvac == "heat")
     {
