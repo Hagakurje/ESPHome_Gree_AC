@@ -155,7 +155,7 @@ automation:
     entity_id: climate.bedroom
     from: 'unavailable'
   action:
-    - service: esphome.ir_1_bedroom_set_data
+    - service: esphome.ir_bedroom_set_data
       data:
         temp: "{{ states('input_number.status_climate_bedroom_temp') }}"
         hvac: "{{ states('input_text.status_climate_bedroom_hvac') }}"
