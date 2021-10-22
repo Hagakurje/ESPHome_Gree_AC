@@ -78,31 +78,31 @@ automation:
   initial_state: 'on'
   trigger:
     - platform: state
-      entity_id: climate.bedroom
+      entity_id: climate.bedroom_ac
   condition:
     condition: not
     conditions:
       - condition: state
-        entity_id: climate.bedroom
+        entity_id: climate.bedroom_ac
         state: "unavailable"
   action:
     - service: input_text.set_value
       target:
         entity_id: input_text.status_climate_bedroom_hvac
       data:
-        value: "{{ states('climate.bedroom') }}"
+        value: "{{ states('climate.bedroom_ac') }}"
 
 - id: sync_climate_bedroom_fan
   alias: Sync Climate Bedroom Fan
   trigger:
     - platform: state
-      entity_id: climate.bedroom
+      entity_id: climate.bedroom_ac
       attribute: fan_mode
   condition:
     condition: not
     conditions:
       - condition: state
-        entity_id: climate.bedroom
+        entity_id: climate.bedroom_ac
         attribute: fan_mode
         state: 'on'
   action:
@@ -110,26 +110,26 @@ automation:
       target:
         entity_id: input_text.status_climate_bedroom_fan
       data:
-        value: "{{ state_attr('climate.bedroom','fan_mode') }}"
+        value: "{{ state_attr('climate.bedroom_ac','fan_mode') }}"
 
 - id: sync_climate_bedroom_swing
   alias: Sync Climate Bedroom Swing
   trigger:
     - platform: state
-      entity_id: climate.bedroom
+      entity_id: climate.bedroom_ac
       attribute: swing_mode
   action:
     - service: input_text.set_value
       target:
         entity_id: input_text.status_climate_bedroom_swing
       data:
-        value: "{{ state_attr('climate.bedroom','swing_mode') }}"
+        value: "{{ state_attr('climate.bedroom_ac','swing_mode') }}"
 
 - id: sync_climate_bedroom_temp
   alias: Sync Climate Bedroom Temp
   trigger:
     - platform: state
-      entity_id: climate.bedroom
+      entity_id: climate.bedroom_ac
       attribute: temperature
   condition:
     condition: not
@@ -143,7 +143,7 @@ automation:
       target:
         entity_id: input_number.status_climate_bedroom_temp
       data:
-        value: "{{ state_attr('climate.bedroom','temperature') }}"
+        value: "{{ state_attr('climate.bedroom_ac','temperature') }}"
 
 
 
@@ -152,7 +152,7 @@ automation:
   initial_state: 'on'
   trigger:
     platform: state
-    entity_id: climate.bedroom
+    entity_id: climate.bedroom_ac
     from: 'unavailable'
   action:
     - service: esphome.ir_bedroom_set_data
