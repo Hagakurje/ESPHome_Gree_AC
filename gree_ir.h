@@ -8,11 +8,15 @@ IRGreeAC ac(kIrLed);
 
 class GreeAC : public Component, public Climate, public CustomAPIDevice
 {
+private:
+  sensor::Sensor* temp_sensor{nullptr};
+
 public:
+  void set_temp_sensor(sensor::Sensor *sensor) { this->temp_sensor = sensor; }
+
   void setup() override
   {
     register_service(&GreeAC::set_data, "set_data", {"hvac", "temp", "fan", "swing", "light"});
-    register_service(&GreeAC::set_current_tempareture, "set_current_tempareture", {"temp"});
 
     ac.begin();
     ac.on();
@@ -21,6 +25,19 @@ public:
     ac.setTemp(22);
     ac.setFan(kGreeFanAuto);
     ac.setSwingVertical(true, kGreeSwingAuto);
+
+    if(this->temp_sensor != nullptr){
+      this->temp_sensor->add_on_raw_state_callback([this](float temp) { update_temp(temp); });
+    }
+  }
+
+  void update_temp(float temp) {
+    if(isnan(temp)){
+      return;
+    }
+
+    this->current_temperature = temp;
+    this->publish_state();
   }
 
   climate::ClimateTraits traits()
@@ -31,7 +48,7 @@ public:
     traits.set_supports_two_point_target_temperature(false);
     traits.set_visual_min_temperature(16);
     traits.set_visual_max_temperature(30);
-    traits.set_visual_temperature_step(1);
+    traits.set_visual_temperature_step(0.1); //Show current temperature with degrees
 
 
     std::set<ClimateMode> climateModes; 
@@ -225,12 +242,6 @@ public:
     ac.setLight(light);
 
     call.perform();
-  }
-
-  void set_current_tempareture(float temp)
-  {
-    this->current_temperature = temp;
-    this->publish_state();
   }
 };
 

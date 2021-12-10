@@ -40,12 +40,18 @@ climate:
 - platform: custom
   lambda: |-
     auto bedroom_ac = new GreeAC();
+    bedroom_ac->set_temp_sensor(id(current_temperature));
     App.register_component(bedroom_ac);
     return {bedroom_ac};
 
   climates:
     - name: "Bedroom AC"
-    
+
+sensor:
+  - platform: homeassistant
+    id: current_temperature
+    entity_id: sensor.temperature
+
 binary_sensor:
 - platform: gpio
   pin:

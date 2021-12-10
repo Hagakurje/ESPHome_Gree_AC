@@ -20,6 +20,32 @@
 ![Bedroom AC](images/bedroom_ac.png)
 
 
+**Current temperature sensor** - your current Home Assistant temperature sensor:
+
+```
+sensor:
+  - platform: homeassistant
+    id: current_temperature
+    entity_id: sensor.temperature
+```
+
+
+**Set temperature sensor** - call **set_temp_sensor** method:
+
+```
+climate:
+- platform: custom
+  lambda: |-
+    auto bedroom_ac = new GreeAC();
+    bedroom_ac->set_temp_sensor(id(current_temperature)); 
+    App.register_component(bedroom_ac);
+    return {bedroom_ac};
+
+  climates:
+    - name: "Bedroom AC"
+```
+
+
 **Service esphome.ir_bedroom_set_data** - set all data to AC with one 'beep':
 
 ```
@@ -32,21 +58,6 @@
     light: True
 ```
 
-**Service esphome.ir_bedroom_set_current_tempareture** - set current temperature from external temperature sensor:
-
-```
-automation:
-  - alias: "Bedroom AC current temp"
-    trigger:
-      - platform: state
-        entity_id: sensor.bedroom_temperature
-    mode: queued
-    action:
-      - service: esphome.ir_bedroom_set_current_tempareture
-        data:
-          temp: >-
-            {{ states('sensor.bedroom_temperature') | float }}
-```
 
 **Switch switch.bedroom_ac_light** - current AC light switch.
 
