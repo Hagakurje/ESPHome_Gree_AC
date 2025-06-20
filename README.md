@@ -19,6 +19,31 @@
 
 ![Bedroom AC](images/bedroom_ac.png)
 
+### NEW version NOT using custom component - ir_bedroom_updated.yaml:
+Use ESPHome gree component:
+```
+climate:
+  - platform: gree
+    name: "Bedroom AC"
+    id: "bedroom_ac"
+    sensor: current_temperature
+    model: yan
+```
+**model** can be: generic, yan, yaa, yac, yac1fb9, yx1ff, yag
+
+**Service esphome.ir_bedroom_control** - set all data to AC with one 'beep':
+
+```
+- service: esphome.ir_bedroom_control
+  data:
+    hvac: cool
+    temp: 22
+    fan: auto
+    swing: off
+```
+
+
+### OLD version using custom component - ir_bedroom.yaml:
 
 **Current temperature sensor** - your current Home Assistant temperature sensor:
 
